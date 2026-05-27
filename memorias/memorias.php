@@ -7,7 +7,6 @@ error_reporting(E_ALL);
 require_once("assets/util/Conexao.php");
 require_once("assets/model/Memoria.php");
 
-
 //Conexão
 $conexao = Conexao::getConexao();
 
@@ -107,117 +106,136 @@ $memorias = $stm->fetchAll();
     <title>Cadastro de Memórias</title>
 
     <link href="assets/styles/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="app.css">
 </head>
 
-<body class="">
+<body class="bg-primary-subtle">
 
     <h1 class="text-center fw-bold fs-2 my-3 text-danger-emphasis">Cadastro de Memórias</h1>
 
     <!-- Listagem de Memorias -->
-    <table class="" border="1">
+    <table class="table w-50 mx-auto rounded-4 overflow-hidden border">
         <!-- Cabeçalho -->
-        <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Descricao</th>
-            <th>Imagem</th>
-            <th>Tipo</th>
-            <th>Frequência</th>
-            <th>Data</th>
-            <th></th>
-        </tr>
-
-        <!-- Dados -->
-        <?php foreach ($memorias as $m): ?>
+        <thead>
             <tr>
-                <td><?= $m["id"] ?></td>
-                <td><?= $m["nome"] ?></td>
-                <td><?= strlen($m["descricao"]) > 30 ? substr($m["descricao"], 0, 30) . "..." : $m["descricao"] ?></td>
-                <td>
-                    <img src="<?= $m["imagem"] ?>" width="75" height="50">
-                </td>
-                <td>
-                    <?php
-                    if ($m['tipo'] == 'V')
-                        print "Vida";
-                    else if ($m['tipo'] == 'F')
-                        print "Filme";
-                    else if ($m['tipo'] == 'A')
-                        print "Anime";
-                    else if ($m['tipo'] == 'J')
-                        print "Jogo";
-                    ?>
-                </td>
-                <td>
-                    <?php
-                    if ($m['frequencia'] == 'T')
-                        print "Toda Hora";
-                    else if ($m['frequencia'] == 'M')
-                        print "Muito";
-                    else if ($m['frequencia'] == 'F')
-                        print "Frequentemente";
-                    else if ($m['frequencia'] == 'A')
-                        print "As Vezes";
-                    else if ($m['frequencia'] == 'D')
-                        print "Dificilmente";
-                    else if ($m['frequencia'] == 'R')
-                        print "Raramente";
-                    else if ($m['frequencia'] == 'N')
-                        print "Nunca";
-                    ?>
-                </td>
-                <td><?= $m["dataMemoria"] ?></td>
-                <td><a href="memoriasExcluir.php?id=<?= $m["id"] ?>" onclick="if(! confirm('Confirme a exclusão da memória')) return false;">Excluir</a></td>
+                <th scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Descricao</th>
+                <th scope="col">Imagem</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Frequência</th>
+                <th scope="col">Data</th>
+                <th scope="col"></th>
             </tr>
+        </thead>
 
-        <?php endforeach; ?>
+        <tbody>
+            <!-- Dados -->
+            <?php foreach ($memorias as $m): ?>
+                <tr>
+                    <td><?= $m["id"] ?></td>
+                    <td><?= $m["nome"] ?></td>
+                    <td><?= strlen($m["descricao"]) > 30 ? substr($m["descricao"], 0, 30) . "..." : $m["descricao"] ?></td>
+                    <td>
+                        <img src="<?= $m["imagem"] ?>" width="75" height="50">
+                    </td>
+                    <td>
+                        <?php
+                        if ($m['tipo'] == 'V')
+                            print "Vida";
+                        else if ($m['tipo'] == 'F')
+                            print "Filme";
+                        else if ($m['tipo'] == 'A')
+                            print "Anime";
+                        else if ($m['tipo'] == 'J')
+                            print "Jogo";
+                        ?>
+                    </td>
+                    <td>
+                        <?php
+                        if ($m['frequencia'] == 'T')
+                            print "Toda Hora";
+                        else if ($m['frequencia'] == 'M')
+                            print "Muito";
+                        else if ($m['frequencia'] == 'F')
+                            print "Frequentemente";
+                        else if ($m['frequencia'] == 'A')
+                            print "As Vezes";
+                        else if ($m['frequencia'] == 'D')
+                            print "Dificilmente";
+                        else if ($m['frequencia'] == 'R')
+                            print "Raramente";
+                        else if ($m['frequencia'] == 'N')
+                            print "Nunca";
+                        ?>
+                    </td>
+                    <td><?= $m["dataMemoria"] ?></td>
+                    <td><a href="memoriasExcluir.php?id=<?= $m["id"] ?>" onclick="if(! confirm('Confirme a exclusão da memória')) return false;">Excluir</a></td>
+                </tr>
+
+            <?php endforeach; ?>
+        </tbody>
     </table>
 
-    <br><br><br>
+    <br><br>
 
     <!--Formulário-->
-    <form action="" method="POST" enctype="multipart/form-data"> <!--enctype para permitir o upload das imagems-->
-        <label for="">Nome: </label>
-        <input type="text" placeholder="Nome da memória:" name="nome" value="<?php if (isset($nome)) echo $nome; ?>">
-        <br><br>
+    <div class="card d-flex mx-auto" style="width: 25rem;">
+        <div class="card-body">
+            <form action="" method="POST" enctype="multipart/form-data"> <!--enctype para permitir o upload das imagems-->
 
-        <label for="">Imagem: </label>
-        <input type="file" name="imagem">
-        <br><br>
+                <h3 class="fs-3 fw-semibold text-center">Formulário</h3>
 
-        <label for="">Descrição: </label>
-        <input type="text" placeholder="Descrição da memória:" name="descricao" value="<?php if (isset($descricao)) echo $descricao; ?>">
-        <br><br>
+                <p class="fw-bold">Nome: </p>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="floatingInput" placeholder="Nome da memória:" name="nome" value="<?php if (isset($nome)) echo $nome; ?>">
+                    <label for="floatingInput">Nome </label>
+                <div>
+                <br>
 
-        <label for="">Tipo: </label>
-        <select name="tipo">
-            <option class="text-secondary" value="" disabled selected>Selecionar Tipo</option>
-            <option value="V" <?= (isset($tipo)) && $tipo == "V" ? "selected" : "" ?>>Vida</option>
-            <option value="F" <?= (isset($tipo)) && $tipo == "F" ? "selected" : "" ?>>Filme</option>
-            <option value="A" <?= (isset($tipo)) && $tipo == "A" ? "selected" : "" ?>>Anime</option>
-            <option value="J" <?= (isset($tipo)) && $tipo == "J" ? "selected" : "" ?>>Jogo</option>
-        </select>
-        <br><br>
+                <div>
+                    <label for="" class=" form-label fw-bold">Imagem: </label>
+                    <input type="file" class="form-control" name="imagem">
+                </div>
+                <br>
 
-        <label for="">Frequência: </label>
-        <select name="frequencia">
-            <option class="text-secondary" value="" disabled selected>Selecionar Frequência</option>
-            <option value="T" <?= (isset($frequencia)) && $frequencia == "T" ? "selected" : "" ?>>Toda Hora (100%)</option>
-            <option value="M" <?= (isset($frequencia)) && $frequencia == "M" ? "selected" : "" ?>>Muito (80%)</option>
-            <option value="F" <?= (isset($frequencia)) && $frequencia == "F" ? "selected" : "" ?>>Frequentemente (60%)</option>
-            <option value="A" <?= (isset($frequencia)) && $frequencia == "A" ? "selected" : "" ?>>As Vezes (50%)</option>
-            <option value="D" <?= (isset($frequencia)) && $frequencia == "D" ? "selected" : "" ?>>Dificilmente (40%)</option>
-            <option value="R" <?= (isset($frequencia)) && $frequencia == "R" ? "selected" : "" ?>>Raramente (20%)</option>
-            <option value="N" <?= (isset($frequencia)) && $frequencia == "N" ? "selected" : "" ?>>Nunca (0%)</option>
-        </select>
-        <br><br>
+                <p class="fw-bold">Descrição: </p>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="floatingInput" placeholder="Descrição da memória:" name="descricao" value="<?php if (isset($descricao)) echo $descricao; ?>">
+                    <label for="floatingInput">Descrição </label>
+                </div>
 
-        <label for="">Quando começou: </label>
-        <input type="date" name="dataMemoria" value="<?= isset($dataMemoria) ? $dataMemoria : '' ?>">
-        <br><br>
+                <select class="form-select" aria-label="Default select example" name="tipo">
+                    <option class="text-secondary" value="" disabled selected>Selecionar Tipo</option>
+                    <option value="V" <?= (isset($tipo)) && $tipo == "V" ? "selected" : "" ?>>Vida</option>
+                    <option value="F" <?= (isset($tipo)) && $tipo == "F" ? "selected" : "" ?>>Filme</option>
+                    <option value="A" <?= (isset($tipo)) && $tipo == "A" ? "selected" : "" ?>>Anime</option>
+                    <option value="J" <?= (isset($tipo)) && $tipo == "J" ? "selected" : "" ?>>Jogo</option>
+                </select>
+                <br>
 
-        <button>Salvar Memória</button>
-    </form>
+                <select class="form-select" aria-label="Default select example" name="frequencia">
+                    <option class="text-secondary" value="" disabled selected>Selecionar Frequência</option>
+                    <option value="T" <?= (isset($frequencia)) && $frequencia == "T" ? "selected" : "" ?>>Toda Hora (100%)</option>
+                    <option value="M" <?= (isset($frequencia)) && $frequencia == "M" ? "selected" : "" ?>>Muito (80%)</option>
+                    <option value="F" <?= (isset($frequencia)) && $frequencia == "F" ? "selected" : "" ?>>Frequentemente (60%)</option>
+                    <option value="A" <?= (isset($frequencia)) && $frequencia == "A" ? "selected" : "" ?>>As Vezes (50%)</option>
+                    <option value="D" <?= (isset($frequencia)) && $frequencia == "D" ? "selected" : "" ?>>Dificilmente (40%)</option>
+                    <option value="R" <?= (isset($frequencia)) && $frequencia == "R" ? "selected" : "" ?>>Raramente (20%)</option>
+                    <option value="N" <?= (isset($frequencia)) && $frequencia == "N" ? "selected" : "" ?>>Nunca (0%)</option>
+                </select>
+                <br>
+
+                <div>
+                    <label for="" class="form-label fw-bold">Quando começou: </label>
+                    <input type="date" class="form-control" name="dataMemoria" value="<?= isset($dataMemoria) ? $dataMemoria : '' ?>">
+                </div>        
+                <br>
+
+                <button type="submit" class="btn btn-success d-flex justify-content-center align-items-center mx-auto">Salvar Memória</button>
+            </form>
+        </div>
+    </div>
 
     <!-- Visualizar -> Leva Pros Cards -->
 
