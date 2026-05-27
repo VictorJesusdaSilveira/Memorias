@@ -1,0 +1,2 @@
+Fazer uma validação se a memória ja existe no banco;
+Talvez destruir o "Memoria.php" (objeto) e fazer um arquivo chaamdo "Card.php" e usar POO apenas nos cards
