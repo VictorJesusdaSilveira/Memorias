@@ -35,7 +35,7 @@ foreach ($dados as $m) {
 
     <div class="container py-5">
 
-        <h1 class="text-center mb-5 fw-bold text-primary">Minhas memórias da Gigi</h1>
+        <h1 class="text-center mb-5 fw-bold text-primary">Minhas Memórias</h1>
 
         <div class="row g-4 justify-content-center">
 
