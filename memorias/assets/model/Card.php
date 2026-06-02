@@ -1,6 +1,7 @@
 <?php
 
-class Memoria {
+class Card
+{
     //Atributos
     private string $nome;
     private string $descricao;
@@ -9,19 +10,47 @@ class Memoria {
     private string $frequencia;
     private string $dataMemoria;
 
-    
+
     //Métodos
-    public function __construct(string $nome , string $descricao , string $imagem, string $tipo , string $frequencia , string $dataMemoria){
+    public function __construct(string $nome, string $descricao, string $imagem, string $tipo, string $frequencia, string $dataMemoria)
+    {
         $this->nome = $nome;
         $this->descricao = $descricao;
         $this->imagem = $imagem;
-        $this->tipo = $tipo;
+
+        if ($tipo == 'V')
+            $this->tipo = "Vida";
+        else if ($tipo == 'F')
+            $this->tipo = "Filme";
+        else if ($tipo == 'A')
+            $this->tipo = "Anime";
+        else if ($tipo == 'J')
+            $this->tipo = "Jogo";
+
         $this->frequencia = $frequencia;
-        $this->dataMemoria = $dataMemoria;
+
+        if ($frequencia == 'T')
+            $this->frequencia = "Toda Hora";
+        else if ($frequencia == 'M')
+            $this->frequencia = "Muito";
+        else if ($frequencia == 'F')
+            $this->frequencia = "Frequentemente";
+        else if ($frequencia == 'A')
+            $this->frequencia = "As Vezes";
+        else if ($frequencia == 'D')
+            $this->frequencia = "Dificilmente";
+        else if ($frequencia == 'R')
+            $this->frequencia = "Raramente";
+        else if ($frequencia == 'N')
+            $this->frequencia= "Nunca";
+
+        $this->dataMemoria = date("d/m/Y", strtotime($dataMemoria));
+
+
     }
 
     //GET's & SET's
-    
+
     /**
      * Get the value of nome
      */
@@ -130,6 +159,3 @@ class Memoria {
         return $this;
     }
 }
-
-
-?>
