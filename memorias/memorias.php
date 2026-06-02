@@ -5,13 +5,15 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 require_once("assets/util/Conexao.php");
-require_once("assets/model/Memoria.php");
 
 //Conexão
 $conexao = Conexao::getConexao();
 
 //Declara aqui a mensagem de erro pra usar em todo código
 $msgErro = "";
+
+//Cria o array pras memórias
+$cards = array();
 
 //Salvar a memória
 if (isset($_POST["nome"])) {
@@ -77,9 +79,6 @@ if (isset($_POST["nome"])) {
         $stm = $conexao->prepare($sql);
         $stm->execute(array($nome, $descricao, $caminho, $tipo, $frequencia, $dataMemoria));
 
-        //Inserir no objeto
-        $memoria = new Memoria($nome, $descricao, $caminho, $tipo, $frequencia, $dataMemoria);
-
         //Redirecionar para a página de listagem
         header("location:memorias.php");
     } else {
@@ -106,142 +105,167 @@ $memorias = $stm->fetchAll();
     <title>Cadastro de Memórias</title>
 
     <link href="assets/styles/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="assets/styles/app.css">
 </head>
 
 <body class="bg-primary-subtle">
 
-    <h1 class="text-center fw-bold fs-2 my-3 text-danger-emphasis">Cadastro de Memórias</h1>
+    <div class="container py-5">
 
-    <!-- Listagem de Memorias -->
-    <table class="table w-50 mx-auto rounded-4 overflow-hidden border">
-        <!-- Cabeçalho -->
-        <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Nome</th>
-                <th scope="col">Descricao</th>
-                <th scope="col">Imagem</th>
-                <th scope="col">Tipo</th>
-                <th scope="col">Frequência</th>
-                <th scope="col">Data</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
+        <h1 class="display-5 fw-bold text-center text-primary mb-5">Cadastro de memórias com a Gigi</h1>
 
-        <tbody>
-            <!-- Dados -->
-            <?php foreach ($memorias as $m): ?>
-                <tr>
-                    <td><?= $m["id"] ?></td>
-                    <td><?= $m["nome"] ?></td>
-                    <td><?= strlen($m["descricao"]) > 30 ? substr($m["descricao"], 0, 30) . "..." : $m["descricao"] ?></td>
-                    <td>
-                        <img src="<?= $m["imagem"] ?>" width="75" height="50">
-                    </td>
-                    <td>
-                        <?php
-                        if ($m['tipo'] == 'V')
-                            print "Vida";
-                        else if ($m['tipo'] == 'F')
-                            print "Filme";
-                        else if ($m['tipo'] == 'A')
-                            print "Anime";
-                        else if ($m['tipo'] == 'J')
-                            print "Jogo";
-                        ?>
-                    </td>
-                    <td>
-                        <?php
-                        if ($m['frequencia'] == 'T')
-                            print "Toda Hora";
-                        else if ($m['frequencia'] == 'M')
-                            print "Muito";
-                        else if ($m['frequencia'] == 'F')
-                            print "Frequentemente";
-                        else if ($m['frequencia'] == 'A')
-                            print "As Vezes";
-                        else if ($m['frequencia'] == 'D')
-                            print "Dificilmente";
-                        else if ($m['frequencia'] == 'R')
-                            print "Raramente";
-                        else if ($m['frequencia'] == 'N')
-                            print "Nunca";
-                        ?>
-                    </td>
-                    <td><?= $m["dataMemoria"] ?></td>
-                    <td><a href="memoriasExcluir.php?id=<?= $m["id"] ?>" onclick="if(! confirm('Confirme a exclusão da memória')) return false;">Excluir</a></td>
-                </tr>
+        <!-- Mensagem de erro -->
+        <?php if (!empty($msgErro)): ?>
+            <div class="alert alert-danger shadow-sm mb-4">
+                <?= $msgErro ?>
+            </div>
+        <?php endif; ?>
 
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+        <!-- Tabela -->
+        <div class="card shadow border-0 mb-5">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Memórias Cadastradas</h3>
+            </div>
 
-    <br><br>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Descrição</th>
+                                <th>Imagem</th>
+                                <th>Tipo</th>
+                                <th>Frequência</th>
+                                <th>Data</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
 
-    <!--Formulário-->
-    <div class="card d-flex mx-auto" style="width: 25rem;">
-        <div class="card-body">
-            <form action="" method="POST" enctype="multipart/form-data"> <!--enctype para permitir o upload das imagems-->
+                        <tbody>
 
-                <h3 class="fs-3 fw-semibold text-center">Formulário</h3>
+                            <?php foreach ($memorias as $m): ?>
+                                <tr>
+                                    <td><?= $m["id"] ?></td>
+                                    <td class="fw-semibold"><?= $m["nome"] ?></td>
+                                    <td> <?= strlen($m["descricao"]) > 30 ? substr($m["descricao"], 0, 30) . "..." : $m["descricao"] ?> </td>
+                                    <td><img src="<?= $m["imagem"] ?>" class="rounded shadow-sm" width="90" height="60" style="object-fit:cover;"></td>
+                                    <td>
+                                        <?php
+                                            if ($m['tipo'] == 'V') 
+                                                print "Vida";
+                                            else if ($m['tipo'] == 'F') 
+                                                print "Filme";
+                                            else if ($m['tipo'] == 'A') 
+                                                print "Anime";
+                                            else if ($m['tipo'] == 'J') 
+                                                print "Jogo";
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <?php
+                                            if ($m['frequencia'] == 'T') 
+                                                print "Toda Hora";
+                                            else if ($m['frequencia'] == 'M') 
+                                                print "Muito";
+                                            else if ($m['frequencia'] == 'F') 
+                                                print "Frequentemente";
+                                            else if ($m['frequencia'] == 'A') 
+                                                print "Às Vezes";
+                                            else if ($m['frequencia'] == 'D') 
+                                                print "Dificilmente";
+                                            else if ($m['frequencia'] == 'R') 
+                                                print "Raramente";
+                                            else if ($m['frequencia'] == 'N') 
+                                                print "Nunca";
+                                        ?>
+                                    </td>
+                                    <td><?= date("d/m/Y", strtotime($m["dataMemoria"])) ?></td>
+                                    <td><a href="memoriasExcluir.php?id=<?= $m["id"] ?>" class="btn btn-danger btn-sm" onclick="if(!confirm('Confirme a exclusão da memória')) return false;">Excluir</a></td>
+                                </tr>
 
-                <p class="fw-bold">Nome: </p>
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="floatingInput" placeholder="Nome da memória:" name="nome" value="<?php if (isset($nome)) echo $nome; ?>">
-                    <label for="floatingInput">Nome </label>
-                <div>
-                <br>
+                            <?php endforeach; ?>
 
-                <div>
-                    <label for="" class=" form-label fw-bold">Imagem: </label>
-                    <input type="file" class="form-control" name="imagem">
-                </div>
-                <br>
+                        </tbody>
+                        
+                    </table>
 
-                <p class="fw-bold">Descrição: </p>
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="floatingInput" placeholder="Descrição da memória:" name="descricao" value="<?php if (isset($descricao)) echo $descricao; ?>">
-                    <label for="floatingInput">Descrição </label>
                 </div>
 
-                <select class="form-select" aria-label="Default select example" name="tipo">
-                    <option class="text-secondary" value="" disabled selected>Selecionar Tipo</option>
-                    <option value="V" <?= (isset($tipo)) && $tipo == "V" ? "selected" : "" ?>>Vida</option>
-                    <option value="F" <?= (isset($tipo)) && $tipo == "F" ? "selected" : "" ?>>Filme</option>
-                    <option value="A" <?= (isset($tipo)) && $tipo == "A" ? "selected" : "" ?>>Anime</option>
-                    <option value="J" <?= (isset($tipo)) && $tipo == "J" ? "selected" : "" ?>>Jogo</option>
-                </select>
-                <br>
-
-                <select class="form-select" aria-label="Default select example" name="frequencia">
-                    <option class="text-secondary" value="" disabled selected>Selecionar Frequência</option>
-                    <option value="T" <?= (isset($frequencia)) && $frequencia == "T" ? "selected" : "" ?>>Toda Hora (100%)</option>
-                    <option value="M" <?= (isset($frequencia)) && $frequencia == "M" ? "selected" : "" ?>>Muito (80%)</option>
-                    <option value="F" <?= (isset($frequencia)) && $frequencia == "F" ? "selected" : "" ?>>Frequentemente (60%)</option>
-                    <option value="A" <?= (isset($frequencia)) && $frequencia == "A" ? "selected" : "" ?>>As Vezes (50%)</option>
-                    <option value="D" <?= (isset($frequencia)) && $frequencia == "D" ? "selected" : "" ?>>Dificilmente (40%)</option>
-                    <option value="R" <?= (isset($frequencia)) && $frequencia == "R" ? "selected" : "" ?>>Raramente (20%)</option>
-                    <option value="N" <?= (isset($frequencia)) && $frequencia == "N" ? "selected" : "" ?>>Nunca (0%)</option>
-                </select>
-                <br>
-
-                <div>
-                    <label for="" class="form-label fw-bold">Quando começou: </label>
-                    <input type="date" class="form-control" name="dataMemoria" value="<?= isset($dataMemoria) ? $dataMemoria : '' ?>">
-                </div>        
-                <br>
-
-                <button type="submit" class="btn btn-success d-flex justify-content-center align-items-center mx-auto">Salvar Memória</button>
-            </form>
+            </div>
         </div>
-    </div>
 
-    <!-- Visualizar -> Leva Pros Cards -->
+        <!-- Formulário -->
+        <div class="card shadow-lg border-0 mx-auto form-memoria">
 
-    <div style="color: red;">
-        <br>
-        <?= $msgErro ?>
+            <div class="card-header bg-success text-white text-center">
+                <h3 class="mb-0">Nova Memória</h3>
+            </div>
+
+            <div class="card-body p-4">
+
+                <form action="" method="POST" enctype="multipart/form-data">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Nome</label>
+                        <input type="text" class="form-control" name="nome" value="<?= isset($nome) ? $nome : '' ?>">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Imagem</label>
+                        <input type="file" class="form-control" name="imagem">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Descrição</label>
+                        <textarea class="form-control" rows="3" name="descricao"><?= isset($descricao) ? $descricao : '' ?></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Tipo</label>
+
+                        <select class="form-select" name="tipo">
+                            <option value="">Selecionar Tipo</option>
+                            <option value="V" <?= (isset($tipo)) && $tipo == "V" ? "selected" : "" ?> >Vida</option>
+                            <option value="F" <?= (isset($tipo)) && $tipo == "F" ? "selected" : "" ?> >Filme</option>
+                            <option value="A" <?= (isset($tipo)) && $tipo == "A" ? "selected" : "" ?> >Anime</option>
+                            <option value="J" <?= (isset($tipo)) && $tipo == "J" ? "selected" : "" ?> >Jogo</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Frequência</label>
+
+                        <select class="form-select" name="frequencia">
+                            <option value="">Selecionar Frequência</option>
+                            <option value="T" <?= (isset($frequencia)) && $frequencia == "T" ? "selected" : "" ?> >Toda Hora (100%)</option>
+                            <option value="M" <?= (isset($frequencia)) && $frequencia == "M" ? "selected" : "" ?> >Muito (80%)</option>
+                            <option value="F" <?= (isset($frequencia)) && $frequencia == "F" ? "selected" : "" ?> >Frequentemente (60%)</option>
+                            <option value="A" <?= (isset($frequencia)) && $frequencia == "A" ? "selected" : "" ?> >Às Vezes (50%)</option>
+                            <option value="D" <?= (isset($frequencia)) && $frequencia == "D" ? "selected" : "" ?> >Dificilmente (40%)</option>
+                            <option value="R" <?= (isset($frequencia)) && $frequencia == "R" ? "selected" : "" ?> >Raramente (20%)</option>
+                            <option value="N" <?= (isset($frequencia)) && $frequencia == "N" ? "selected" : "" ?> >Nunca (0%)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Quando começou</label>
+
+                        <input type="date" class="form-control" name="dataMemoria" value="<?= isset($dataMemoria) ? $dataMemoria : '' ?>">
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 fw-bold">Salvar Memória</button>
+                </form>
+            </div>
+
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="cards.php" class="btn btn-primary btn-lg shadow">Ver Memórias em Cards</a>
+        </div>
+
     </div>
 
     <script src="assets/scripts/bootstrap.bundle.min.js"></script>
