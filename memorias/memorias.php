@@ -112,7 +112,7 @@ $memorias = $stm->fetchAll();
 
     <div class="container py-5">
 
-        <h1 class="display-5 fw-bold text-center text-primary mb-5">Cadastro de memórias com a Gigi</h1>
+        <h1 class="display-5 fw-bold text-center text-primary mb-5">Cadastro de memórias</h1>
 
         <!-- Mensagem de erro -->
         <?php if (!empty($msgErro)): ?>
