@@ -13,8 +13,12 @@ class Conexao {
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 //Define o tipo do retorno das consultas
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC);
-
+            
+            //Usar em casa
             self::$conexao = new PDO("mysql:host=localhost:3306;dbname=db_relacionamento","root","",$opcoes);
+            
+            //Usar na Escola
+            //self::$conexao = new PDO("mysql:host=localhost:3306;dbname=db_relacionamento","root","bancodedados",$opcoes);
         }
         return self::$conexao;
     }
