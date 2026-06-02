@@ -1,0 +1,57 @@
+.form-memoria {
+    max-width: 700px;
+    border-radius: 20px;
+}
+
+.card {
+    border-radius: 20px;
+}
+
+.table img {
+    transition: .3s;
+}
+
+.table img:hover {
+    transform: scale(1.1);
+}
+
+.btn {
+    border-radius: 12px;
+}
+
+.card-header {
+    border-radius: 20px 20px 0 0 !important;
+}
+
+.card-memorias {
+    width: 18rem;
+    min-height: 550px;
+
+    border-radius: 16px;
+    overflow: hidden;
+
+    transition: all .25s ease;
+}
+
+.card-memorias:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, .15);
+}
+
+.card-memorias img {
+    height: 220px;
+    object-fit: cover;
+}
+
+.card-memorias .card-title {
+    min-height: 50px;
+}
+
+.card-memorias .card-text {
+    height: 90px;
+    overflow-y: auto;
+}
+
+body {
+    min-height: 100vh;
+}
