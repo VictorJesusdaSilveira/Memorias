@@ -39,6 +39,10 @@ foreach ($dados as $m) {
 
         <div class="row g-4 justify-content-center">
 
+            <?php if (count($cards) == 0): ?>
+                <p class="text-center text-danger fs-3 fw-semibold">Você ainda não possui cards cadastrados</p>
+            <?php endif ?>
+
             <?php foreach ($cards as $c): ?>
                 <div class="col-12 col-sm-6 col-lg-4 col-xl-3 d-flex justify-content-center">
 
